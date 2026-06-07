@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>עמוד פרטי עסק</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --green:#1aa06a;
+      --blue:#4b62ff;
+      --orange:#f59e0b;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#d9dee7;
+      --bg:#ffffff;
+      --chip:#e5e7eb;
+      --profit:#9aa3ad;
+      --sales:#1aa06a;
+      --gridCol:#e5e7eb;
+      --cardBorder:#eef2f7;
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{
+      font-family:"Assistant",system-ui,-apple-system,sans-serif;
+      background:#f3f4f6;
+      color:var(--text);
+      direction:rtl;
+    }
+    .page{
+      max-width:1700px;
+      width:96vw;
+      margin:18px auto;
+      background:#fff;
+      border-radius:16px;
+      padding:22px 32px 32px 16px;
+      box-shadow:0 10px 26px rgba(0,0,0,.08);
+      position:relative;
+    }
+
+    /* ══ HEADER ══ */
+    .header{
+      min-height:92px;
+      display:flex;
+      align-items:flex-start;
+      gap:40px;
+      direction:rtl;
+      padding:0 8px 8px;
+      overflow:hidden;
+    }
+
+    /* Far right: business name, like the reference */
+    .hBizName{
+      flex:0 0 250px;
+      max-width:250px;
+      text-align:right;
+      padding:0;
+      border-left:none;
+    }
+    .hBizLabel{ font-size:11px; color:#ff6db5; font-weight:700; margin-bottom:2px; }
+    .hBizTitle{
+      color:var(--green);
+      font-size:34px;
+      font-weight:800;
+      line-height:1;
+      letter-spacing:-.4px;
+      white-space:nowrap;
+    }
+    .hBizTag{
+      display:block;
+      color:#111827;
+      font-size:22px;
+      font-weight:400;
+      line-height:1.2;
+      margin-top:9px;
+      white-space:nowrap;
+    }
+    .hBizSub{ font-size:12px; color:#ff6db5; margin-top:2px; }
+
+    /* Owner block */
+    .hOwner{
+      flex:0 0 230px;
+      max-width:230px;
+      text-align:right;
+      padding:0;
+      border-left:none;
+    }
+    .hOwnerLabel{ font-size:11px; color:#ff6db5; font-weight:700; }
+    .hOwnerName{
+      color:var(--green);
+      font-size:22px;
+      font-weight:500;
+      line-height:1.15;
+      display:block;
+      white-space:nowrap;
+    }
+    .hOwnerDetail{
+      font-size:15px;
+      color:var(--green);
+      font-weight:500;
+      line-height:1.35;
+      margin-top:0;
+      white-space:nowrap;
+    }
+
+    /* Legal/year block */
+    .hLegal{
+      flex:0 0 210px;
+      max-width:210px;
+      text-align:center;
+      padding:0;
+      border-left:none;
+    }
+
+    /* Location/revenue block */
+    .hLocation{
+      flex:0 0 205px;
+      max-width:205px;
+      text-align:center;
+      padding:0;
+      border-left:none;
+    }
+
+    .hLabel{
+      font-size:15px;
+      color:var(--green);
+      font-weight:500;
+      line-height:1.25;
+      white-space:nowrap;
+    }
+    .hVal{
+      font-size:22px;
+      color:var(--green);
+      font-weight:500;
+      line-height:1.15;
+      margin-top:0;
+      white-space:nowrap;
+    }
+    .hVal.editable{ min-height:1.4em; }
+    .hLabelRow{ display:flex; align-items:baseline; gap:6px; white-space:nowrap; }
+    .hLegal .hLabel,
+    .hLocation .hVal + .hVal{
+      margin-top:8px;
+    }
+    .cohortChip{
+      display:inline-block;
+      background:#cfd8dc;
+      border-radius:0;
+      padding:0 8px;
+      font-size:18px;
+      font-weight:500;
+      color:#117a5b;
+      margin-top:0;
+    }
+
+    /* Far left: social icons */
+    .hSocial{
+      flex:1 1 auto;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:flex-start;
+      gap:4px;
+      padding:0 0 0 0;
+      min-width:240px;
+      margin-right:36px;
+    }
+    .socialIcons{
+      display:flex;
+      flex-direction:row;
+      direction:ltr;
+      gap:18px;
+      align-items:flex-start;
+      justify-content:flex-start;
+    }
+    .iconWrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:7px;
+      min-width:52px;
+    }
+    .icon{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:#bfc0c2;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      color:#fff;
+      font-size:25px;
+      line-height:1;
+      text-decoration:none;
+      pointer-events:auto;
+    }
+    .icon.ig{ font-size:34px; font-weight:700; }
+    .icon.web{ font-size:31px; }
+    .iconLabel{
+      font-size:13px;
+      color:#ff6db5;
+      text-align:center;
+      font-weight:500;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .divider{
+      border:0; border-top:2px dotted var(--line);
+      margin:2px 0 18px;
+    }
+
+    /* ══ MAIN 3-COL ══ */
+    .body{
+      display:flex;
+      gap:20px;
+      align-items:flex-start;
+      direction:rtl;
+    }
+
+    /* RIGHT col = רקע עסק */
+  /* RIGHT COLUMN SECTION STYLE - matches reference image */
+.colR{
+  font-family:"Assistant", system-ui, -apple-system, sans-serif;
+  flex:0 0 22%;
+  min-width:0;
+  padding-top:10px;
+}
+
+/* Increase vertical spacing between each section */
+.colR .sec{
+  margin-bottom:76px;
+}
+
+/* Headings style */
+.colR .hBlue{
+  color:#4b62ff;
+  font-family:"Assistant", system-ui, -apple-system, sans-serif;
+  font-size:24px;
+  font-weight:700;
+  line-height:1.15;
+  margin-bottom:14px;
+  letter-spacing:-0.2px;
+}
+
+/* Paragraph / editable value text */
+.colR .p{
+  font-family:"Assistant", system-ui, -apple-system, sans-serif;
+  color:#111827;
+  font-size:18px;
+  font-weight:400;
+  line-height:1.45;
+  margin-top:0;
+}
+
+/* Remove muted gray effect only inside this section */
+.colR .muted{
+  color:#111827;
+}
+
+/* Keep editable text clean */
+.colR .editable{
+  padding:0 2px;
+}
+
+    /* MID col */
+/* MIDDLE COLUMN STYLE - matches reference image without black box */
+/* CENTER / MIDDLE COLUMN - reference accurate */
+.colM{
+  flex:1 1 auto;
+  min-width:0;
+  font-family:"Assistant", system-ui, -apple-system, sans-serif;
+  text-align:center;
+  padding:0 10px;
+}
+
+/* Top heading area */
+.colMHeaderGrid{
+  display:block;
+  margin-bottom:60px;
+}
+.colMOrangeTop{
+  display:none;
+}
+
+.colMMainTitle{
+  text-align:right;
+  width:100%;
+  max-width:none;
+  margin:0;
+}
+
+.colMMainTitle .hBigBlue{
+  color:#4b62ff;
+  font-size:24px;
+  font-weight:400;
+  line-height:1.2;
+  margin-bottom:12px;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.colMMainTitle .sm{
+  color:#111827;
+  font-size:18px;
+  font-weight:400;
+  line-height:1.35;
+  margin-bottom:0;
+  text-align:center;
+}
+
+/* Sales / marketing row */
+.salesMarketingGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:105px;
+  align-items:start;
+  margin-bottom:86px;
+  text-align: right;
+}
+
+.salesBox,
+.marketingBox{
+  text-align:right;
+}
+
+/* Main blue headings */
+.colM .hBlue,
+.colM .hBigBlue{
+  color:#4b62ff;
+  font-size:24px;
+  font-weight:700;
+  line-height:1.15;
+  margin-bottom:6px;
+}
+
+/* Secondary blue heading */
+.colM .smallBlue{
+  font-size:19px;
+  margin-bottom:2px;
+}
+
+/* Orange labels */
+.colM .hGreen,
+.colM .hOrange{
+  color:#ff7a2f;
+  font-size:18px;
+  font-weight:500;
+  line-height:1.3;
+  margin-bottom:6px;
+}
+
+/* Body text */
+.colM .sm,
+.colM .p,
+.colM ul{
+  color:#111827;
+  font-size:18px;
+  font-weight:400;
+  line-height:1.45;
+}
+
+.colM .sm{
+  margin-bottom:4px;
+}
+
+.colM .p{
+  margin:0;
+}
+
+/* Needs / highlights row */
+.needsGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:105px;
+  align-items:start;
+  margin-bottom:58px;
+}
+
+.needsBox,
+.highlightsBox{
+  text-align:right;
+}
+
+.highlightsBox .p{
+  width:100%;
+  max-width:none;
+  text-align:right;
+  margin:0;
+}
+
+/* Bullet list */
+#businessNeedsList{
+  display:block;
+  text-align:right;
+  direction:rtl;
+  padding-right:22px;
+  margin-top:36px;
+  margin-right:0;
+  margin-left:auto;
+}
+/* Bottom center section */
+.colMChallenges{
+  text-align:right;
+  margin-top:0;
+  margin-bottom:0;
+}
+
+.colMChallenges .challengeTopText{
+  color:#ff7a2f;
+  font-size:16px;
+  font-weight:500;
+  line-height:1.35;
+  max-width:760px;
+  margin:0 auto 4px;
+}
+
+.colMChallenges .hBigBlue{
+  color:#4b62ff;
+  font-size:24px;
+  font-weight:700;
+  line-height:1.15;
+  margin-bottom:10px;
+  text-align: right;
+}
+
+.colMChallenges .p{
+  width:100%;
+  max-width:none;
+  margin:0;
+  text-align:right;
+  color:#111827;
+  font-size:18px;
+  line-height:1.45;
+}
+
+/* Remove gray muted text inside middle */
+.colM .muted{
+  color:#111827;
+}
+
+/* Editable cleanup */
+.colM .editable{
+  padding:0 3px;
+}
+.colM .hBlue,
+.colM .hBigBlue,
+.colM .smallBlue,
+.colM .hGreen,
+.colM .hOrange,
+.colM .sm,
+.colM .p,
+.colM ul,
+.colM li{
+  text-align:right;
+}
+
+/* Keep top title centered only */
+.colMMainTitle .hBigBlue,
+.colMMainTitle .sm{
+  text-align:right;
+}
+
+/* Keep the final bottom heading centered if needed */
+
+
+    /* LEFT col = chart + התרשמות */
+/* LEFT COLUMN - chart + interviewer impression */
+.colL{
+  flex:0 0 24%;
+  min-width:0;
+  font-family:"Assistant", system-ui, -apple-system, sans-serif;
+  text-align:right;
+  padding:0 18px 0 16px;
+  border-right:2px dotted var(--line);
+}
+
+/* Chart legend */
+.colL .chartLegend{
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  align-items:center;
+  gap:28px;
+  font-size:16px;
+  color:#111827;
+  font-weight:400;
+  margin-bottom:10px;
+  direction:rtl;
+}
+
+.colL .legendItem{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.colL .dot{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  display:inline-block;
+}
+
+.colL .dot.s{
+  background:#078538;
+}
+
+.colL .dot.p{
+  background:#09c766;
+}
+
+/* Chart card should look clean like the reference */
+.colL .chartCard{
+  border:none;
+  border-radius:0;
+  padding:0;
+  background:#fff;
+  margin-bottom:28px;
+}
+
+.colL .svgWrap{
+  width:100%;
+}
+
+/* Chart colors */
+.colL .barS{
+  fill:#078538;
+}
+
+.colL .barP{
+  fill:#09c766;
+}
+
+.colL .axisText,
+.colL .xTick{
+  fill:#111827;
+  font-size:15px;
+  font-weight:400;
+}
+
+.colL .gridLine{
+  stroke:#cfcfcf;
+  stroke-width:1;
+  shape-rendering:crispEdges;
+}
+
+/* Text blocks under chart */
+.leftReviewBlock{
+  margin-top:18px;
+  text-align:right;
+}
+
+.leftSecondBlock{
+  margin-top:24px;
+}
+
+/* Main green title */
+.leftMainTitle{
+  color:#00b957;
+  font-size:28px;
+  font-weight:800;
+  line-height:1.15;
+  margin-bottom:8px;
+  text-align:right;
+}
+
+/* Second green title */
+.leftGreenTitle{
+  color:#00b957;
+  font-size:22px;
+  font-weight:800;
+  line-height:1.2;
+  margin-bottom:8px;
+  text-align:right;
+}
+
+/* Paragraph text */
+.colL .p{
+  color:#111827;
+  font-size:19px;
+  font-weight:400;
+  line-height:1.45;
+  text-align:right;
+  margin:0;
+}
+
+/* Remove muted gray only inside left section */
+.colL .muted{
+  color:#111827;
+}
+
+/* Editable cleanup */
+.colL .editable{
+  padding:0 2px;
+}
+    /* Section */
+    .sec{ margin-bottom:14px; }
+
+    .hBlue{ color:var(--blue); font-weight:800; font-size:14px; margin-bottom:3px; }
+    .hGreen{ color:var(--green); font-weight:700; font-size:13px; margin-bottom:2px; }
+    .hOrange{ color:#d97706; font-weight:800; font-size:13px; margin-bottom:2px; }
+    .hBigBlue{ color:var(--blue); font-weight:800; font-size:16px; margin-bottom:4px; }
+    .hBigOrange{ color:#d97706; font-weight:800; font-size:15px; margin-bottom:4px; }
+
+    .p{ font-size:13px; line-height:1.6; color:#111827; }
+    .sm{ font-size:11px; color:var(--muted); line-height:1.5; margin-bottom:3px; }
+    .muted{ color:var(--muted); }
+    ul{ padding-right:16px; font-size:13px; line-height:1.8; color:#111827; }
+
+    /* two-col within mid */
+    .twoCol{ display:flex; gap:14px; }
+    .twoCol > div{ flex:1 1 0; min-width:0; }
+
+    /* mid bottom row */
+    .midBot{ display:flex; gap:14px; margin-top:12px; align-items:flex-start; }
+    .midBotCol{ flex:1 1 0; min-width:0; }
+
+    /* CHART */
+    .chartLegend{
+      display:flex; gap:12px; justify-content:flex-end;
+      font-size:12px; color:var(--muted); font-weight:700;
+      margin-bottom:6px;
+    }
+    .legendItem{ display:flex; align-items:center; gap:4px; }
+    .dot{ width:10px;height:10px;border-radius:50%;display:inline-block; }
+    .dot.s{ background:var(--sales); }
+    .dot.p{ background:var(--profit); }
+
+    .chartCard{
+      border:1px solid var(--cardBorder);
+      border-radius:10px;
+      padding:10px 8px 6px;
+      background:#fff;
+    }
+    .svgWrap{ width:100%; }
+    svg{ width:100%;height:100%;display:block; }
+    .axisText{ fill:#6b7280;font-size:10px;font-weight:700; }
+    .gridLine{ stroke:var(--gridCol);stroke-width:1;shape-rendering:crispEdges; }
+    .barS{ fill:var(--sales); }
+    .barP{ fill:var(--profit); }
+    .xTick{ fill:#6b7280;font-size:10px;font-weight:700; }
+
+    /* editable */
+    .editable{
+      outline:none; border-radius:4px;
+      padding:1px 3px; display:inline-block; min-width:10px;
+      transition:background .12s,box-shadow .12s;
+    }
+    .editable:hover{ background:rgba(75,98,255,.06); }
+    .editable:focus{ background:rgba(75,98,255,.1); box-shadow:0 0 0 2px rgba(75,98,255,.2); }
+    .eb{ display:block; width:100%; white-space:pre-wrap; }
+
+    /* export btn */
+    #exportBtn{
+      position:absolute; top:16px; left:20px; z-index:20;
+      background:var(--green); color:#fff; border:none;
+      border-radius:8px; padding:8px 14px;
+      font-family:inherit; font-size:13px; font-weight:800;
+      cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.12);
+    }
+    #exportBtn:hover{ opacity:.92; }
+    #exportBtn:disabled{ opacity:.6; cursor:not-allowed; }
+
+    @media(max-width:1100px){
+      .body{ flex-direction:column; }
+      .colR,.colM,.colL{ flex:1 1 auto; }
+      .twoCol,.midBot{ flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+  <button id="exportBtn">Export to Drive</button>
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+
+    <!-- 1. Far RIGHT: שם העסק -->
+    <div class="hBizName">
+      <div class="hBizTitle editable" contenteditable="true" data-param="businessName">שם העסק</div>
+      <div class="hBizTag editable" contenteditable="true" data-param="businessTagline">תיאור העסק במשפט קצר 4 מילים</div>
+    </div>
+
+    <!-- 2. שם בעל העסק -->
+    <div class="hOwner">
+      <div class="hOwnerName">שם: <span class="editable" contenteditable="true" data-param="ownerName">שם מלא בעל.ת העסק</span></div>
+      <div class="hOwnerDetail">מס׳ טלפון: <span class="editable" contenteditable="true" data-param="ownerPhone"></span></div>
+      <div class="hOwnerDetail">מייל: <span class="editable" contenteditable="true" data-param="ownerEmail"></span></div>
+    </div>
+
+    <!-- 3. ישות משפטית + שנת הקמה -->
+    <div class="hLegal">
+      <div class="hLabelRow">
+        <div class="hLabel">ישות משפטית</div>
+        <div class="hVal editable" contenteditable="true" data-param="legalEntity"></div>
+      </div>
+      <div class="hLabelRow" style="margin-top:8px;">
+        <div class="hLabel">שנת הקמת העסק</div>
+        <div class="hVal editable" contenteditable="true" data-param="foundingYear"></div>
+      </div>
+    </div>
+
+    <!-- 4. מיקום + מחזור -->
+    <div class="hLocation">
+      <div class="hLabelRow">
+        <div class="hLabel">מיקום העסק:</div>
+        <div class="hVal editable" contenteditable="true" data-param="location"></div>
+      </div>
+      <div class="hLabelRow" style="margin-top:8px;">
+        <div class="hLabel">מחזור:</div>
+        <div class="hVal editable" contenteditable="true" data-param="revenue"></div>
+      </div>
+    </div>
+
+    <!-- 5. Far LEFT: social icons -->
+    <div class="hSocial">
+      <div class="socialIcons">
+        <div class="iconWrap">
+          <a id="linkedinLink" href="#" class="icon li">in</a>
+          <div class="iconLabel">לינקדאין</div>
+        </div>
+        <div class="iconWrap">
+          <a id="facebookLink" href="#" class="icon fb">f</a>
+          <div class="iconLabel">פייסבוק</div>
+        </div>
+        <div class="iconWrap">
+          <a id="instagramLink" href="#" class="icon ig">◎</a>
+          <div class="iconLabel">אינסטגרם</div>
+        </div>
+        <div class="iconWrap">
+          <a id="websiteLink" href="#" class="icon web">🌐</a>
+          <div class="iconLabel">קישור לאתר</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /header -->
+
+  <hr class="divider" />
+
+  <!-- ══ BODY ══ -->
+  <div class="body">
+
+    <!-- ── RIGHT COL: רקע על עסק ── -->
+<aside class="colR">
+
+  <div class="sec">
+    <div class="hBlue">רקע על בעל העסק</div>
+    <p class="p muted editable eb" contenteditable="true" data-param="ownerBackground">קצת על בעל העסק, איך ולמה הקים את העסק, מה עושה</p>
+  </div>
+
+  <div class="sec">
+    <div class="hBlue">רקע על העסק</div>
+    <p class="p muted editable eb" contenteditable="true" data-param="businessBackground">מה העסק עושה? מה מוכרים ולמי?</p>
+  </div>
+
+  <div class="sec">
+    <div class="hBlue">עובדים בעסק</div>
+    <p class="p muted editable eb" contenteditable="true" data-param="employees">כמה עובדים יש? מה התפקידים שלהם?</p>
+  </div>
+
+  <div class="sec">
+    <div class="hBlue">קהלי היעד של העסק</div>
+    <p class="p muted editable eb" contenteditable="true" data-param="targetAudience">מי הקהל שלהם? קיים / פוטנציאלי</p>
+  </div>
+
+</aside>
+
+    <!-- ── MIDDLE COL ── -->
+<section class="colM">
+
+  <!-- Top Area -->
+  <div class="colMHeaderGrid">
+
+    <div class="colMMainTitle">
+      <div class="hBigBlue">הערכת מצב העסק – נושאים לשימור ולשיפור</div>
+      <div class="sm editable eb" contenteditable="true" data-param="businessStatusSub">סטטוס העסק מתוך האתגרים, החוזקות וההזדמנויות כפי שעלה בראיון העומק</div>
+    </div>
+  </div>
+
+  <!-- Sales / Marketing Area -->
+  <div class="salesMarketingGrid">
+
+    <div class="salesBox">
+      <div class="hBlue">מכירה ושיווק</div>
+      <div class="hBlue">ערוצי מכירה</div>
+      <div class="sm editable eb" contenteditable="true" data-param="salesChannelsDesc">איפה מוכרים? איך רוכשים?</div>
+    </div>
+
+    <div class="marketingBox">
+      <div class="hBlue">ערוצי שיווק</div>
+      <div class="sm editable eb" contenteditable="true" data-param="marketingChannelsDesc">האם עושים שיווק? איפה?</div>
+    </div>
+
+  </div>
+
+  <!-- Needs / Highlights Area -->
+  <div class="needsGrid">
+
+    <div class="needsBox">
+      <div class="hBlue">צרכי העסק</div>
+      <div class="hBlue smallBlue">תחומים נדרשים</div>
+      <ul id="businessNeedsList" class="editable eb" contenteditable="true" data-param="businessNeeds">
+        <li>מיומנויות ניהול</li>
+        <li>שיווק</li>
+        <li>פיתוח עסקי</li>
+      </ul>
+    </div>
+
+    <div class="highlightsBox">
+      <div class="hBlue">דגשים לצרכי העסק</div>
+      <p class="p muted editable eb" contenteditable="true" data-param="mentorHighlights">פירוט ונימוק על הצרכים, נושאים שלא קיימים ברשימה – למשל, בניית אתר, קמפיינר</p>
+    </div>
+
+  </div>
+
+  <!-- Bottom Challenges -->
+  <div class="colMChallenges">
+    <div class="hBigBlue">אתגרים אישיים והערות נוספות שעלו מן הראיון</div>
+    <p class="p muted editable eb" contenteditable="true" data-param="ownerChallenges">כל הדברים שהעסק אמר וחשוב לנו שידעו – האם יש אתגרים מסוימים, תיאום ציפיות בעל העסק, פתיחות בעל העסק לשינויים</p>
+  </div>
+
+</section>
+
+    <!-- ── LEFT COL: chart + התרשמות ── -->
+    <aside class="colL">
+
+  <!-- Chart -->
+  <div class="chartLegend">
+    <span class="legendItem"><i class="dot p"></i>רווחים</span>
+    <span class="legendItem"><i class="dot s"></i>מכירות</span>
+  </div>
+
+  <div class="chartCard">
+    <div class="svgWrap" style="height:260px;">
+      <svg id="combinedChart" viewBox="0 0 360 200" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+
+  <!-- התרשמות המראיינים -->
+  <div class="leftReviewBlock">
+    <div class="leftMainTitle">התרשמות המראיינים</div>
+
+    <p class="p muted editable eb" contenteditable="true" data-param="businessFit">פוטנציאל צמיחה, רצון, מוטיבציה, מחויבות להוסיף במשפט דגשים של המראיין על אופי אישיותי של העל העסק. למשל: בחורה נעימה, בחור מבין עניין עסקי מאוד, אוריינטציה טכנולוגית</p>
+  </div>
+
+  <!-- התאמת בעל העסק לתכנית -->
+  <div class="leftReviewBlock leftSecondBlock">
+    <div class="leftGreenTitle">התאמת בעל העסק לתכנית</div>
+
+    <p class="p muted editable eb" contenteditable="true" data-param="ownerCommitment">המלצה לסוג הצוות, צרכים אישיים – למשל, זקוק למנטור מכיל, סבלני, מישהו שיחזיק אותו קצר</p>
+  </div>
+
+</aside>
+
+  </div><!-- /body -->
+</main>
+
+<script>
+  document.getElementById("exportBtn").addEventListener("click", exportToDrive);
+
+  function buildExportHtml(){
+    const clone=document.documentElement.cloneNode(true);
+    const btn=clone.querySelector("#exportBtn"); if(btn) btn.remove();
+    clone.querySelectorAll("script").forEach(s=>s.remove());
+    clone.querySelectorAll("[contenteditable]").forEach(el=>el.removeAttribute("contenteditable"));
+    document.querySelectorAll("[data-param]").forEach(live=>{
+      const c=clone.querySelector(`[data-param="${live.dataset.param}"]`);
+      if(c) c.innerHTML=live.innerHTML;
+    });
+    ["linkedinLink","facebookLink","instagramLink","websiteLink"].forEach(id=>{
+      const l=document.getElementById(id), c=clone.querySelector("#"+id);
+      if(!l||!c) return;
+      c.href=l.href; c.target=l.target; c.rel=l.rel||""; c.style.cssText=l.style.cssText;
+    });
+    const lc=document.getElementById("combinedChart"), cc=clone.querySelector("#combinedChart");
+    if(lc&&cc) cc.innerHTML=lc.innerHTML;
+    return "<!DOCTYPE html>\n"+clone.outerHTML;
+  }
+
+  async function exportToDrive(){
+    const btn=document.getElementById("exportBtn");
+    const boardId=getParam("boardId"), itemId=getParam("itemId");
+    if(!boardId||!itemId){alert("Missing boardId or itemId.");return;}
+    btn.disabled=true; btn.textContent="Exporting...";
+    try{
+      const r=await fetch("https://hook.eu2.make.com/ahld24l4fthtnl3s9spqvl2ocsxzp6pw",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({html:buildExportHtml(),itemId,boardId,type:"OnePager"})
+      });
+      if(!r.ok) throw new Error(r.status);
+      alert("Export sent successfully.");
+    }catch(e){console.error(e);alert("Export failed.");}
+    finally{btn.disabled=false;btn.textContent="Export to Drive";}
+  }
+
+  const YEARS=[2022,2023,2024,2025];
+  let syncTimer;
+  function getParam(k){return new URLSearchParams(location.search).get(k)||"";}
+  function setParam(k,v){
+    const u=new URL(location.href);
+    const c=(v||"").trim();
+    if(c) u.searchParams.set(k,c); else u.searchParams.delete(k);
+    history.replaceState({},"",u);
+    clearTimeout(syncTimer); syncTimer=setTimeout(syncMonday,500);
+  }
+  async function syncMonday(){
+    const boardId=getParam("boardId"),itemId=getParam("itemId");
+    if(!boardId||!itemId) return;
+    try{
+      await fetch("https://api.monday.com/v2",{method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":"eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYwODU1OTc2NiwiYWFpIjoxMSwidWlkIjo5NzM5MDU4MywiaWFkIjoiMjAyNi0wMS0xNlQxNDozOToyNi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTMxMDQ5MjAsInJnbiI6InVzZTEifQ.74kdskIpFWz6F_-Zw6mWwkA8LXsZAFEzuJruMXEKzwM"},
+        body:JSON.stringify({query:`mutation($i:ID!,$b:ID!,$v:String!){change_simple_column_value(item_id:$i board_id:$b column_id:"link_mm25ftf9" value:$v){id}}`,variables:{i:itemId,b:boardId,v:location.href+" OnePager"}})
+      });
+    }catch(e){console.error(e);}
+  }
+
+  function parseArr(v,fb=[0,0,0,0]){
+    if(!v) return fb;
+    const a=v.split(",").map(x=>Number(x.trim())).filter(x=>!isNaN(x));
+    return a.length?a:fb;
+  }
+  function niceMax(n){
+    if(n<=0) return 100;
+    const p=Math.pow(10,Math.floor(Math.log10(n)));
+    const x=n/p;
+    return ((x<=1)?1:(x<=2)?2:(x<=5)?5:10)*p;
+  }
+
+  function renderChart(){
+    const sales=parseArr(getParam("sales"),[0,0,0,0]);
+    const profits=parseArr(getParam("profits"),[0,0,0,0]);
+    const svg=document.getElementById("combinedChart");
+    svg.innerHTML="";
+    const vb=svg.viewBox.baseVal, W=vb.width, H=vb.height;
+    const pad={t:16,r:10,b:28,l:46};
+    const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+    const n=YEARS.length;
+    const allV=[...sales,...profits,0];
+    const mn=Math.min(...allV), mx=Math.max(...allV);
+    const aMax=niceMax(mx);
+    const aMin=mn<0?-niceMax(Math.abs(mn)):0;
+    const rng=(aMax-aMin)||1;
+    const yF=v=>pad.t+(1-(v-aMin)/rng)*ph;
+
+    // grid
+    for(let i=0;i<=5;i++){
+      const t=i/5, y=pad.t+t*ph;
+      const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+      l.setAttribute("x1",pad.l);l.setAttribute("x2",pad.l+pw);
+      l.setAttribute("y1",y);l.setAttribute("y2",y);l.setAttribute("class","gridLine");
+      svg.appendChild(l);
+      const val=Math.round(aMax-t*(aMax-aMin));
+      const txt=document.createElementNS("http://www.w3.org/2000/svg","text");
+      txt.setAttribute("x",pad.l-4);txt.setAttribute("y",y+3.5);
+      txt.setAttribute("text-anchor","end");txt.setAttribute("class","axisText");
+      txt.textContent=Math.abs(val)>=1000?(val/1000)+"k":val;
+      svg.appendChild(txt);
+    }
+
+    if(aMin<0&&aMax>0){
+      const y0=yF(0);
+      const bl=document.createElementNS("http://www.w3.org/2000/svg","line");
+      bl.setAttribute("x1",pad.l);bl.setAttribute("x2",pad.l+pw);
+      bl.setAttribute("y1",y0);bl.setAttribute("y2",y0);
+      bl.setAttribute("stroke","#94a3b8");bl.setAttribute("stroke-width","1.5");
+      svg.appendChild(bl);
+    }
+
+    const gw=pw/n, bw=Math.min(18,gw*0.35), gap=3, y0=yF(0);
+    for(let i=0;i<n;i++){
+      const cx=pad.l+i*gw+gw/2;
+      // sales bar (left of pair)
+      const sx=cx-bw-gap/2;
+      const sv=sales[i]||0, syv=yF(sv);
+      const sr=document.createElementNS("http://www.w3.org/2000/svg","rect");
+      sr.setAttribute("x",sx);sr.setAttribute("width",bw);sr.setAttribute("rx","3");
+      if(sv>=0){sr.setAttribute("y",syv);sr.setAttribute("height",Math.max(0,y0-syv));}
+      else{sr.setAttribute("y",y0);sr.setAttribute("height",Math.max(0,syv-y0));}
+      sr.setAttribute("class","barS");svg.appendChild(sr);
+      // profit bar (right of pair)
+      const px2=cx+gap/2;
+      const pv=profits[i]||0, pyv=yF(pv);
+      const pr=document.createElementNS("http://www.w3.org/2000/svg","rect");
+      pr.setAttribute("x",px2);pr.setAttribute("width",bw);pr.setAttribute("rx","3");
+      if(pv>=0){pr.setAttribute("y",pyv);pr.setAttribute("height",Math.max(0,y0-pyv));}
+      else{pr.setAttribute("y",y0);pr.setAttribute("height",Math.max(0,pyv-y0));}
+      pr.setAttribute("class","barP");svg.appendChild(pr);
+      // x label
+      const xt=document.createElementNS("http://www.w3.org/2000/svg","text");
+      xt.setAttribute("x",cx);xt.setAttribute("y",H-4);
+      xt.setAttribute("text-anchor","middle");xt.setAttribute("class","xTick");
+      xt.textContent=YEARS[i];svg.appendChild(xt);
+    }
+  }
+
+  function fmtNeeds(raw){
+    if(!raw.trim()) return "";
+    return raw.split(",").map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
+  }
+  function parseNeeds(){
+    const lis=[...document.querySelectorAll("#businessNeedsList li")].map(l=>l.textContent.trim()).filter(Boolean);
+    if(lis.length) return lis.join(",");
+    return document.getElementById("businessNeedsList").textContent.trim().split(/[\n,]/).map(s=>s.trim()).filter(Boolean).join(",");
+  }
+  function esc(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+
+  function bindFields(){
+    document.querySelectorAll("[data-param]").forEach(el=>{
+      const key=el.dataset.param, val=getParam(key);
+      if(el.id==="businessNeedsList"){ if(val) el.innerHTML=fmtNeeds(val); }
+      else { if(val) el.textContent=val; }
+      el.addEventListener("input",()=>{
+        const nv=el.id==="businessNeedsList"?parseNeeds():el.textContent.replace(/\u00A0/g," ").trim();
+        setParam(key,nv);
+      });
+      el.addEventListener("blur",()=>{
+        const v=getParam(key);
+        if(el.id==="businessNeedsList"){ if(v) el.innerHTML=fmtNeeds(v); }
+        else { if(v) el.textContent=v; }
+      });
+    });
+  }
+
+  function bindLinks(){
+    const defs=[
+      ["linkedinLink","linkedin",{background:"#0077b5",color:"#fff",pointerEvents:"auto"},{background:"#bfc0c2",color:"#fff",pointerEvents:"none"}],
+      ["facebookLink","facebook",{background:"#1877f2",color:"#fff",pointerEvents:"auto"},{background:"#bfc0c2",color:"#fff",pointerEvents:"none"}],
+      ["instagramLink","instagram",{background:"#e1306c",color:"#fff",pointerEvents:"auto"},{background:"#bfc0c2",color:"#fff",pointerEvents:"none"}],
+      ["websiteLink","website",{background:"#4b62ff",color:"#fff",pointerEvents:"auto"},{background:"#bfc0c2",color:"#fff",pointerEvents:"none"}],
+    ];
+    defs.forEach(([id,key,on,off])=>{
+      const el=document.getElementById(id); if(!el) return;
+      const v=getParam(key);
+      el.href=v||"#"; el.target=v?"_blank":"_self"; el.rel=v?"noopener noreferrer":"";
+      Object.assign(el.style,v?on:off);
+      if(!v) el.addEventListener("click",e=>e.preventDefault());
+    });
+  }
+
+  bindFields(); bindLinks(); renderChart();
+
+  function alignSections(){
+    const secs=document.querySelectorAll('.colR .sec');
+    const r1R=secs[0], r1_5R=secs[1], r2R=secs[2], r3R=secs[3];
+    const r1M=document.querySelector('.colMHeaderGrid');
+    const r1_5M=document.querySelector('.salesMarketingGrid');
+    const r2M=document.querySelector('.needsGrid');
+    const r3M=document.querySelector('.colMChallenges');
+    if(!r1R||!r1M||!r1_5R||!r1_5M||!r2R||!r2M||!r3R||!r3M) return;
+    // Reset inline padding-tops before re-measuring
+    [r1R,r1_5R,r2R,r3R,r1M,r1_5M,r2M,r3M].forEach(el=>el.style.paddingTop='');
+    const top=el=>el.getBoundingClientRect().top;
+    let d;
+    // Row 1: רקע על בעל העסק ↔ הערכת מצב העסק
+    d=top(r1R)-top(r1M); if(d>0) r1M.style.paddingTop=d+'px'; else if(d<0) r1R.style.paddingTop=(-d)+'px';
+    // Row 2: רקע על העסק ↔ מכירה ושיווק / ערוצי שיווק
+    d=top(r1_5R)-top(r1_5M); if(d>0) r1_5M.style.paddingTop=d+'px'; else if(d<0) r1_5R.style.paddingTop=(-d)+'px';
+    // Row 3: עובדים בעסק ↔ צרכי העסק / דגשים לצרכי העסק
+    d=top(r2R)-top(r2M); if(d>0) r2M.style.paddingTop=d+'px'; else if(d<0) r2R.style.paddingTop=(-d)+'px';
+    // Row 4: קהלי היעד של העסק ↔ אתגרים אישיים
+    d=top(r3R)-top(r3M); if(d>0) r3M.style.paddingTop=d+'px'; else if(d<0) r3R.style.paddingTop=(-d)+'px';
+  }
+
+  // Run after fonts load (Google Fonts affects line heights / measured positions)
+  document.fonts.ready.then(()=>requestAnimationFrame(alignSections));
+  // Re-align when window is resized
+  window.addEventListener('resize', alignSections);
+  // Re-align when any editable field changes content
+  document.querySelectorAll('[contenteditable]').forEach(el=>
+    el.addEventListener('input',()=>requestAnimationFrame(alignSections))
+  );
+</script>
+</body>
+</html>
