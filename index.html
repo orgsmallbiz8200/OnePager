@@ -663,6 +663,27 @@
     #exportBtn:hover{ opacity:.92; }
     #exportBtn:disabled{ opacity:.6; cursor:not-allowed; }
 
+    /* loading overlay */
+    #loader{
+      position:fixed; inset:0; z-index:50;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:16px;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(2px);
+    }
+    #loader.hidden{ display:none; }
+    .spinner{
+      width:48px; height:48px;
+      border:5px solid #e5e7eb;
+      border-top-color:var(--green);
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+    .loaderText{
+      font-size:16px; font-weight:700; color:var(--green);
+    }
+    @keyframes spin{ to{ transform:rotate(360deg); } }
+
     @media(max-width:1100px){
       .body{ flex-direction:column; }
       .colR,.colM,.colL{ flex:1 1 auto; }
@@ -671,6 +692,10 @@
   </style>
 </head>
 <body>
+<div id="loader">
+  <div class="spinner"></div>
+  <div class="loaderText">טוען נתונים…</div>
+</div>
 <main class="page">
   <button id="exportBtn">Export to Drive</button>
 
@@ -784,7 +809,6 @@
   <div class="salesMarketingGrid">
 
     <div class="salesBox">
-      <div class="hBlue">מכירה ושיווק</div>
       <div class="hBlue">ערוצי מכירה</div>
       <div class="sm editable eb" contenteditable="true" data-param="salesChannelsDesc">איפה מוכרים? איך רוכשים?</div>
     </div>
@@ -810,16 +834,27 @@
     </div>
 
     <div class="highlightsBox">
-      <div class="hBlue">דגשים לצרכי העסק</div>
-      <p class="p muted editable eb" contenteditable="true" data-param="mentorHighlights">פירוט ונימוק על הצרכים, נושאים שלא קיימים ברשימה – למשל, בניית אתר, קמפיינר</p>
+      <div class="hBlue">כלים ותשתיות</div>
+      <p class="p muted editable eb" contenteditable="true" data-param="tools">“באילו כלי ניהול העסק משתמש - למשל: אקסל, מערכת ניהול לקוחות CRM / ERP, צ'אט בוט וכדומה?”</p>
     </div>
 
   </div>
 
   <!-- Bottom Challenges -->
   <div class="colMChallenges">
-    <div class="hBigBlue">אתגרים אישיים והערות נוספות שעלו מן הראיון</div>
-    <p class="p muted editable eb" contenteditable="true" data-param="ownerChallenges">כל הדברים שהעסק אמר וחשוב לנו שידעו – האם יש אתגרים מסוימים, תיאום ציפיות בעל העסק, פתיחות בעל העסק לשינויים</p>
+    <div class="needsGrid">
+
+      <div class="needsBox">
+        <div class="hBigBlue">אתגרים אישיים והערות נוספות שעלו מן הראיון</div>
+        <p class="p muted editable eb" contenteditable="true" data-param="ownerChallenges">כל הדברים שהעסק אמר וחשוב לנו שידעו – האם יש אתגרים מסוימים, תיאום ציפיות בעל העסק, פתיחות בעל העסק לשינויים</p>
+      </div>
+
+      <div class="highlightsBox">
+        <div class="hBigBlue">דגשים לצרכי העסק</div>
+        <p class="p muted editable eb" contenteditable="true" data-param="mentorHighlights">פירוט ונימוק על הצרכים, נושאים שלא קיימים ברשימה – למשל, בניית אתר, קמפיינר</p>
+      </div>
+
+    </div>
   </div>
 
 </section>
@@ -898,23 +933,33 @@
 
   const YEARS=[2022,2023,2024,2025];
   let syncTimer;
-  function getParam(k){return new URLSearchParams(location.search).get(k)||"";}
-  function setParam(k,v){
-    const u=new URL(location.href);
-    const c=(v||"").trim();
-    if(c) u.searchParams.set(k,c); else u.searchParams.delete(k);
-    history.replaceState({},"",u);
-    clearTimeout(syncTimer); syncTimer=setTimeout(syncMonday,500);
+  // Data fetched from the Make.com endpoint, keyed by the same names as data-param.
+  let DATA={};
+  function getParam(k){
+    const fromUrl=new URLSearchParams(location.search).get(k);
+    if(fromUrl!=null&&fromUrl!=="") return fromUrl;
+    const fromData=DATA[k];
+    return fromData!=null?String(fromData):"";
   }
-  async function syncMonday(){
-    const boardId=getParam("boardId"),itemId=getParam("itemId");
-    if(!boardId||!itemId) return;
+  // Endpoint that persists edits back to the collection.
+  const SAVE_ENDPOINT="https://hook.eu2.make.com/cl8x8kytw3rm1a7l36xuep759vdr5nve";
+
+  // Update a single field in the in-memory DATA, then schedule a debounced save.
+  function setField(k,v){
+    const c=(v||"").trim();
+    if(c) DATA[k]=c; else delete DATA[k];
+    clearTimeout(syncTimer); syncTimer=setTimeout(saveCollection,800);
+  }
+
+  async function saveCollection(){
+    const itemId=getItemId()||getParam("itemId");
+    if(!itemId) return;
     try{
-      await fetch("https://api.monday.com/v2",{method:"POST",
-        headers:{"Content-Type":"application/json","Authorization":"eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYwODU1OTc2NiwiYWFpIjoxMSwidWlkIjo5NzM5MDU4MywiaWFkIjoiMjAyNi0wMS0xNlQxNDozOToyNi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTMxMDQ5MjAsInJnbiI6InVzZTEifQ.74kdskIpFWz6F_-Zw6mWwkA8LXsZAFEzuJruMXEKzwM"},
-        body:JSON.stringify({query:`mutation($i:ID!,$b:ID!,$v:String!){change_simple_column_value(item_id:$i board_id:$b column_id:"link_mm25ftf9" value:$v){id}}`,variables:{i:itemId,b:boardId,v:location.href+" OnePager"}})
+      await fetch(SAVE_ENDPOINT,{method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({item_id:itemId,collection:JSON.stringify(DATA)})
       });
-    }catch(e){console.error(e);}
+    }catch(e){console.error("Failed to save collection:",e);}
   }
 
   function parseArr(v,fb=[0,0,0,0]){
@@ -1014,7 +1059,7 @@
       else { if(val) el.textContent=val; }
       el.addEventListener("input",()=>{
         const nv=el.id==="businessNeedsList"?parseNeeds():el.textContent.replace(/\u00A0/g," ").trim();
-        setParam(key,nv);
+        setField(key,nv);
       });
       el.addEventListener("blur",()=>{
         const v=getParam(key);
@@ -1040,7 +1085,45 @@
     });
   }
 
-  bindFields(); bindLinks(); renderChart();
+  // Endpoint that returns the full business data object for an item_id.
+  const DATA_ENDPOINT="https://hook.eu2.make.com/2iopsgrco3td663c7phf6nhij9f4o8t6";
+
+  function getItemId(){
+    const p=new URLSearchParams(location.search);
+    return p.get("item_id")||p.get("itemId")||"";
+  }
+
+  async function loadData(){
+    const itemId=getItemId();
+    if(!itemId) return;
+    try{
+      const r=await fetch(DATA_ENDPOINT,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({item_id:itemId})
+      });
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      const json=await r.json();
+      if(json&&typeof json==="object") DATA=json;
+    }catch(e){
+      console.error("Failed to load data:",e);
+    }
+  }
+
+  function render(){
+    bindFields(); bindLinks(); renderChart();
+  }
+
+  function hideLoader(){
+    const l=document.getElementById("loader");
+    if(l) l.classList.add("hidden");
+  }
+
+  loadData().then(()=>{
+    render();
+    hideLoader();
+    document.fonts.ready.then(()=>requestAnimationFrame(alignSections));
+  });
 
   function alignSections(){
     const secs=document.querySelectorAll('.colR .sec');
@@ -1064,8 +1147,7 @@
     d=top(r3R)-top(r3M); if(d>0) r3M.style.paddingTop=d+'px'; else if(d<0) r3R.style.paddingTop=(-d)+'px';
   }
 
-  // Run after fonts load (Google Fonts affects line heights / measured positions)
-  document.fonts.ready.then(()=>requestAnimationFrame(alignSections));
+  // Alignment after fonts/data load is triggered from loadData().then() above.
   // Re-align when window is resized
   window.addEventListener('resize', alignSections);
   // Re-align when any editable field changes content
