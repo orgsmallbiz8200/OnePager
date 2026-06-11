@@ -931,7 +931,7 @@
     finally{btn.disabled=false;btn.textContent="Export to Drive";}
   }
 
-  const YEARS=[2022,2023,2024,2025];
+  const YEARS=[2021,2022,2023,2024,2025];
   let syncTimer;
   // Data fetched from the Make.com endpoint, keyed by the same names as data-param.
   let DATA={};
@@ -975,8 +975,9 @@
   }
 
   function renderChart(){
-    const sales=parseArr(getParam("sales"),[0,0,0,0]);
-    const profits=parseArr(getParam("profits"),[0,0,0,0]);
+    // 2021 is always 0; the API data (sales/profits) begins at 2022.
+    const sales=[0,...parseArr(getParam("sales"),[0,0,0,0])];
+    const profits=[0,...parseArr(getParam("profits"),[0,0,0,0])];
     const svg=document.getElementById("combinedChart");
     svg.innerHTML="";
     const vb=svg.viewBox.baseVal, W=vb.width, H=vb.height;
