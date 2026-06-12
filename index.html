@@ -940,7 +940,8 @@
     finally{btn.disabled=false;btn.textContent="Export to Drive";}
   }
 
-  const YEARS=[2021,2022,2023,2024,2025];
+  // Years shown on the chart x-axis. Derived from the API "years" field at render time.
+  let YEARS=[2021,2022,2023,2024,2025];
   let syncTimer;
   // Data fetched from the Make.com endpoint, keyed by the same names as data-param.
   let DATA={};
@@ -984,9 +985,23 @@
   }
 
   function renderChart(){
-    // 2021 is always 0; the API data (sales/profits) begins at 2022.
-    const sales=[0,...parseArr(getParam("sales"),[0,0,0,0])];
-    const profits=[0,...parseArr(getParam("profits"),[0,0,0,0])];
+    // Parse the comma-separated years from the API (e.g. "2023,2024,2025").
+    const apiYears=(getParam("years")||"")
+      .split(",").map(x=>parseInt(x.trim(),10)).filter(y=>!isNaN(y))
+      .sort((a,b)=>a-b);
+    let sales=parseArr(getParam("sales"),[]);
+    let profits=parseArr(getParam("profits"),[]);
+
+    if(apiYears.length){
+      // Always prepend one earlier year with sales/profits = 0.
+      YEARS=[apiYears[0]-1,...apiYears];
+      sales=[0,...sales];
+      profits=[0,...profits];
+    }
+    // Pad sales/profits to match the number of years so each bar has a value.
+    while(sales.length<YEARS.length) sales.push(0);
+    while(profits.length<YEARS.length) profits.push(0);
+
     const svg=document.getElementById("combinedChart");
     svg.innerHTML="";
     const vb=svg.viewBox.baseVal, W=vb.width, H=vb.height;
