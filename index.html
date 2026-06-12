@@ -59,7 +59,8 @@
       border-left:none;
     }
     .hBizLabel{ font-size:11px; color:#ff6db5; font-weight:700; margin-bottom:2px; }
-    .hBizTitle{
+    .hBizName .hBizTitle{
+      display:block;
       color:var(--green);
       font-size:34px;
       font-weight:800;
@@ -68,7 +69,7 @@
       white-space:normal;
       overflow-wrap:break-word;
     }
-    .hBizTag{
+    .hBizName .hBizTag{
       display:block;
       color:#111827;
       font-size:22px;
@@ -726,11 +727,11 @@
     <!-- 3. ישות משפטית + שנת הקמה -->
     <div class="hLegal">
       <div class="hLabelRow">
-        <div class="hLabel">ישות משפטית</div>
+        <div class="hLabel">ישות משפטית:</div>
         <div class="hVal editable" contenteditable="true" data-param="legalEntity"></div>
       </div>
       <div class="hLabelRow" style="margin-top:8px;">
-        <div class="hLabel">שנת הקמת העסק</div>
+        <div class="hLabel">שנת הקמת העסק:</div>
         <div class="hVal editable" contenteditable="true" data-param="foundingYear"></div>
       </div>
     </div>
